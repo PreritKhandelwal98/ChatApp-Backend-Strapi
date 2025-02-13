@@ -1,14 +1,14 @@
-export default ({ env }) => [
+export default [
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
-      origin: ["https://chat-app-frontend-yd9g-git-main-prerit-khandelwals-projects.vercel.app"],
+      origin: ["*"], // For debugging, allow all origins (change later to specific domains)
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      headers: ["Content-Type", "Authorization"],
+      headers: ["*"], // Allow all headers (change later)
+      keepHeadersOnError: true,
     },
   },
   'strapi::poweredBy',

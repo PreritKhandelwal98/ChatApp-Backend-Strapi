@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 
 module.exports = {
-  register() {}, // No need to modify this now
+  register() {},
 
   bootstrap({ strapi }) {
     const wss = new WebSocket.Server({ port: 8080 });
@@ -11,7 +11,12 @@ module.exports = {
 
       ws.on('message', (message) => {
         console.log(`📩 Received: ${message}`);
-        ws.send(`Echo: ${message}`); // Echo message back
+
+        // Send the user's message immediately
+        ws.send(`User: ${message}`);
+
+        // Send the server's response immediately (NO DELAY)
+        ws.send(`Server: Echo - ${message}`);
       });
 
       ws.on('close', () => {

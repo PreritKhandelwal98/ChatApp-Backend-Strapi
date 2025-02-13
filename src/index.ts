@@ -16,7 +16,7 @@ module.exports = {
         ws.send(`User: ${message}`);
 
         // Send the server's response immediately (NO DELAY)
-        ws.send(`Server: Echo - ${message}`);
+        ws.send(`Server: ${message}`);
       });
 
       ws.on('close', () => {

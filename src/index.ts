@@ -1,20 +1,25 @@
-// import type { Core } from '@strapi/strapi';
+const WebSocket = require('ws');
 
-export default {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+module.exports = {
+  register() {}, // No need to modify this now
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {},
+  bootstrap({ strapi }) {
+    const wss = new WebSocket.Server({ port: 8080 });
+
+    wss.on('connection', (ws) => {
+      console.log('🔗 Client connected');
+
+      ws.on('message', (message) => {
+        console.log(`📩 Received: ${message}`);
+        ws.send(`Echo: ${message}`); // Echo message back
+      });
+
+      ws.on('close', () => {
+        console.log('❌ Client disconnected');
+      });
+    });
+
+    strapi.server.wss = wss;
+    console.log('🚀 WebSocket Server is running on ws://localhost:8080');
+  },
 };

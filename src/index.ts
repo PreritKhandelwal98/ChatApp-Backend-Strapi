@@ -4,34 +4,34 @@ module.exports = {
   register() {},
 
   bootstrap({ strapi }) {
-    const server = strapi.server.httpServer; // Use Strapi's HTTP server
-    const wss = new WebSocket.Server({ server });
+    const server = strapi.server; // Use Strapi's built-in HTTP server
 
-    server.on("upgrade", (request, socket, head) => {
-      wss.handleUpgrade(request, socket, head, (ws) => {
-        wss.emit("connection", ws, request);
-      });
-    });
+    if (!server.wss) {
+      const wss = new WebSocket.Server({ noServer: true }); // Prevent conflicts
 
-    wss.on("connection", (ws) => {
-      console.log("🔗 Client connected");
-
-      ws.on("message", (message) => {
-        console.log(`📩 Received: ${message}`);
-
-        // Send the user's message immediately
-        ws.send(`User: ${message}`);
-
-        // Send the server's response
-        ws.send(`Server: ${message}`);
+      server.on("upgrade", (request, socket, head) => {
+        wss.handleUpgrade(request, socket, head, (ws) => {
+          wss.emit("connection", ws, request);
+        });
       });
 
-      ws.on("close", () => {
-        console.log("❌ Client disconnected");
-      });
-    });
+      wss.on("connection", (ws) => {
+        console.log("🔗 Client connected");
 
-    strapi.server.wss = wss;
-    console.log("🚀 WebSocket Server is running on Render!");
+        ws.on("message", (message) => {
+          console.log(`📩 Received: ${message}`);
+
+          // Send messages to the client
+          ws.send(`User: ${message}`);
+          ws.send(`Server: ${message}`);
+        });
+
+        ws.on("close", () => console.log("❌ Client disconnected"));
+      });
+
+      // Attach WebSocket instance to Strapi server
+      strapi.server.wss = wss;
+      console.log("🚀 WebSocket Server is running on Render!");
+    }
   },
 };

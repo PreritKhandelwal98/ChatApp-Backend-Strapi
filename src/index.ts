@@ -4,16 +4,15 @@ module.exports = {
   register() {},
 
   bootstrap({ strapi }) {
-    const server = strapi.server; // Use Strapi's built-in HTTP server
+    const httpServer = strapi.server.httpServer; // Correct way to get Strapi's HTTP server
 
-    if (!server.wss) {
-      const wss = new WebSocket.Server({ noServer: true }); // Prevent conflicts
+    if (!httpServer) {
+      console.error("❌ HTTP server is not available in Strapi.");
+      return;
+    }
 
-      server.on("upgrade", (request, socket, head) => {
-        wss.handleUpgrade(request, socket, head, (ws) => {
-          wss.emit("connection", ws, request);
-        });
-      });
+    if (!strapi.wss) {
+      const wss = new WebSocket.Server({ server: httpServer });
 
       wss.on("connection", (ws) => {
         console.log("🔗 Client connected");
@@ -29,8 +28,8 @@ module.exports = {
         ws.on("close", () => console.log("❌ Client disconnected"));
       });
 
-      // Attach WebSocket instance to Strapi server
-      strapi.server.wss = wss;
+      // Attach WebSocket instance to Strapi
+      strapi.wss = wss;
       console.log("🚀 WebSocket Server is running on Render!");
     }
   },

@@ -1,11 +1,11 @@
-export default ({ env }) => [
+export default [
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
   {
     name: 'strapi::cors',
     config: {
-      origin: env('CORS_ORIGIN', '').split(','),
+      origin: ["https://chat-app-frontend-yd9g.vercel.app", "http://localhost:5173"],  // Explicitly define allowed origins
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       headers: ["Content-Type", "Authorization"],
       keepHeadersOnError: true,

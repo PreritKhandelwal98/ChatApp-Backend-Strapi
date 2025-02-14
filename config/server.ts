@@ -4,4 +4,7 @@ export default ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
+  webhooks: {
+    allowedOrigins: ["https://chat-app-frontend-yd9g.vercel.app", "http://localhost:5173"],
+  },
 });

@@ -4,7 +4,4 @@ export default ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
-  webhooks: {
-    allowedOrigins: ["*"], // Allow all for debugging
-  },
 });

@@ -5,7 +5,13 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      origin: ["https://chat-app-frontend-yd9g.vercel.app", "http://localhost:5173"],  // Explicitly define allowed origins
+      origin: (ctx)=>{
+        const allowedOrigins = [
+          "https://chat-app-frontend-r3fh.vercel.app/", 
+          "http://localhost:5173"
+        ];
+        return allowedOrigins.includes(ctx.request.header.origin) ? ctx.request.header.origin : false; 
+      },       
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       headers: ["Content-Type", "Authorization"],
       keepHeadersOnError: true,

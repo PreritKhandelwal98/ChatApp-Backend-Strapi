@@ -13,7 +13,7 @@ export default [
         return allowedOrigins.includes(ctx.request.header.origin) ? ctx.request.header.origin : false; 
       },       
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      headers: ["Content-Type", "Authorization"],
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeadersOnError: true,
     },
   },
